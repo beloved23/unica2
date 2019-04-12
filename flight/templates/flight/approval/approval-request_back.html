@@ -1,0 +1,98 @@
+
+<div style="margin:auto; padding:30px 0; text-align:center; width:650px;"><img src="logo.png" alt="Logo"/></div>
+<div style="color:#e7505a; font-family:Arial,sans-serif; font-size:14px; line-height:1.7em; margin:auto; padding:20px; width:500px;">Hello {{ name }}, <br/>
+    There is a new travel request for {{ travel.user.first_name }} {{ travel.user.last_name }} with reference no {{ travel.ticket_no }} that awaits your approval. See details below;
+</div>
+
+<div style="background-color:#e7505a; border-bottom:2px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:26px; font-weight:bold; margin:auto; padding:20px; text-align:center; width:650px;">Travel Details</div>
+
+<div class="table-data" style="padding:20px; background-color:#e7505a; color: #1a252f; width:650px; margin:auto;">
+    <table cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-spacing:0; margin:0 auto; padding:20px; font-size:14px; font-family:Arial,sans-serif; color:#1a252f; line-height:1.5em; width:650px;">
+            <tr>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Staff</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">AAUID</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Function</th>
+                 <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Travel Type</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Trip Type</th>
+
+            </tr>
+            <tr>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ travel.user.first_name }} {{ travel.user.last_name }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ travel.user.username }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ travel.function }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ travel.travel_type }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ travel.trip_type }}</td>
+            </tr>
+<tr>
+    <td colspan="5">Purpose : {{ travel.purpose }}<br>
+            </td>
+        </tr>
+<tr>
+            <td colspan="5">Trip Objective : {{ travel.objective }}<br>
+            </td>
+        </tr>
+
+
+    </table>
+
+    <table cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-spacing:0; margin:0 auto; padding:20px; font-size:14px; font-family:Arial,sans-serif; color:#1a252f; line-height:1.5em; width:650px;">
+            <tr>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Departure</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Departure Date</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Destination</th>
+
+            </tr>
+        {% for lct in location %}
+            <tr>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ lct.departure_airport }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ lct.departure_date }}</td>
+                <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">{{ lct.destination_airport }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+
+
+<div style="background-color:#e7505a; border-bottom:2px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; margin:auto; padding:10px; text-align:center; width:600px;">Advance Details</div>
+
+    <table cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-spacing:0; margin:0 auto; padding-top:20px; padding:10px; font-size:15px; font-family:Arial,sans-serif; color:#1a252f; line-height:1.5em;width:600px;">
+        <tr>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:20px; padding:10px; text-align:center; vertical-align:middle;">Advance Description</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Unit</th>
+                 <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Rate</th>
+                <th style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;">Cost</th>
+            </tr>
+        {% for advance in advances %}
+           <tr>
+               <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"> {{ advance.advance_description.name }} </td>
+               <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"> {{ advance.units }} </td>
+               <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"> {{ advance.rate }} </td>
+               {% if travel.trip_type == 'Road Trip' %}
+ <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"> NGN{{ advance.cost }} </td>
+
+{% else %}
+               <td style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"> {{ advance.currency }}{{ advance.cost }} </td>
+
+{% endif %}
+            </tr>
+        {% endfor %}
+            </tr>
+        {% endfor %}
+
+
+        <tr style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:right; vertical-align:middle;">
+
+            <td colspan="4">Total (NGN): {{ travel.advance_total_naira }} <br>
+                Total (USD): {{ travel.advance_total_dollar }}
+            </td>
+
+        </tr>
+            <tr>
+                <td colspan="2" style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"><a href="http://{{ host }}/approve-travel?reference={{ travel.reference }}&approval={{ travel.approval_level }}">Approve</a></td>
+                <td colspan="2" style="border:1px solid #1a252f; color:#1a252f; font-family:Arial,sans-serif; font-size:15px; padding:10px; text-align:center; vertical-align:middle;"><a href="http://{{ host }}/reject-travel?reference={{ travel.reference }}&reject={{ travel.approval_level }}">Reject</a></td>
+            </tr>    
+    </table>
+</div>
+
+</div>

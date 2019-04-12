@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://localhost:4200/login -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--<base href="/">--><base href=".">
+    
+    <link rel="apple-touch-icon" sizes="76x76" href="http://localhost:4200/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="http://localhost:4200/assets/img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Airtel Travel Portal</title>
+
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap core CSS     -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Material Dashboard CSS    -->
+    <link href="/static/css/material-dashboard.css" rel="stylesheet">
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="/static/css/demo.css" rel="stylesheet">
+
+    <!--     Fonts and icons     -->
+   <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="/static/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <style>.login-container[_ngcontent-c4] {
+
+    background-color: #fff;
+    padding: 0 5px 5px 5px;
+    text-align: center;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.login-float[_ngcontent-c4] {
+    float: right;
+}</style><style>.alert[_ngcontent-c5] {
+  z-index: 999;
+  position: fixed;
+  bottom: 15px;
+  left: 25%;
+  width: 50%;
+  opacity: 0.9; }</style>
+<body>
+
+    <!--bindings={
+  "ng-reflect-ng-if": "true"
+}--><div _ngcontent-c0="">
+
+<div _ngcontent-c4="" class="main-container">
+        <div _ngcontent-c4="" class="login-container">
+                <form _ngcontent-c4="" class="form-signin ng-invalid ng-dirty ng-touched" method="POST">
+                        <div _ngcontent-c4="" class="control-group normal_text"> <h3 _ngcontent-c4=""><img _ngcontent-c4="" alt="Logo" src="/static/img/airtel-iphone.png"></h3></div>
+
+                        {% csrf_token %}
+                       {{ form.non_field_errors }}
+                        <div _ngcontent-c4="" class="col-sm-11">
+                            <div _ngcontent-c4="" class="input-group has-danger" ng-reflect-klass="input-group" ng-reflect-ng-class="[object Object]">
+                                <span _ngcontent-c4="" class="input-group-addon">
+                                    <i _ngcontent-c4="" class="fa fa-user"></i>
+                                </span>
+                                <input _ngcontent-c4="" autofocus="" class="form-control ng-invalid ng-dirty ng-touched" formcontrolname="username" value="{{ username }}" name="username" placeholder="AAUID" type="text" >
+                            </div>
+                        </div>
+                        <br _ngcontent-c4=""><br _ngcontent-c4=""><br _ngcontent-c4="">
+                        <div _ngcontent-c4="" class="col-sm-11">
+                            <div _ngcontent-c4="" class="input-group" ng-reflect-klass="input-group" ng-reflect-ng-class="[object Object]">
+                                <span _ngcontent-c4="" class="input-group-addon">
+                                    <i _ngcontent-c4="" class="fa fa-lock"></i>
+                                </span>
+                                <input _ngcontent-c4="" class="form-control ng-dirty ng-valid ng-touched" formcontrolname="password" name="password" value="{{ password }}"  placeholder="password" type="password" >
+                            </div>
+                        </div>
+                        <div _ngcontent-c4="" class="login-float">
+                            <button _ngcontent-c4="" class="btn btn-success" type="submit"><i _ngcontent-c4="" class="fa fa-sign-in"></i> Login</button>
+                        </div>
+                
+                        <div _ngcontent-c4="" class="clearfix"></div>
+                
+                        <div _ngcontent-c4="" class="separator">
+                
+                          <div _ngcontent-c4="" class="clearfix"></div>
+                          <br _ngcontent-c4="">
+                
+                          <div _ngcontent-c4="">
+                            <h2 _ngcontent-c4=""><i _ngcontent-c4="" class="fa fa-shield"></i> Airtel Travel Portal!</h2>
+                            <p _ngcontent-c4="">©2017 All Rights Reserved. Airtel Nigeria</p>
+                          </div>
+                        </div>
+                      </form>
+        </div>
+</div>
+
+
+    </div>
+    <!--bindings={
+  "ng-reflect-ng-if": "false"
+}-->
+</div>
+
+
+
+</body></html>

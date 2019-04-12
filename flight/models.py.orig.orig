@@ -1,0 +1,109 @@
+from __future__ import unicode_literals
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+from utility.models import ZONE
+
+from airteltravel.utils import *
+
+from utility.models import *
+# Create your models here.
+
+STATUS = (
+    ('Pending','Pending'),
+    ('Completed', 'Completed')
+)
+
+ACCOMMODATION_TYPE = (
+    ('Hotel', 'Hotel'),
+    ('Lieu', 'Lieu')
+)
+
+MEAL_DAYS = ((str(i), i) for i in range(0, 31))
+
+TRAVEL_TYPE = (('National', 'National'),
+               ('International', 'International'))
+               #('Private', 'Private'))
+
+TRIP_TYPE = (
+               ('One Way', 'One Way'),
+               ('Return Flight', 'Return Flight'),
+               ('Multiple Flight', 'Multiple Flight'),
+               ('Road Trip', 'Road Trip')
+               )
+
+
+class Travel(models.Model):
+    user = models.ForeignKey(User, related_name="flight_travel")
+    function = models.ForeignKey(Function)
+    travel_type = models.CharField(max_length=30, choices=TRAVEL_TYPE)
+    trip_type = models.CharField(max_length=30, choices=TRIP_TYPE)
+    accommodation_type = models.CharField(choices=ACCOMMODATION_TYPE, max_length=20)
+    zone = models.CharField(choices=ZONE, max_length=15, null=True)
+    band = models.ForeignKey(Band)
+    purpose = models.ForeignKey(Purpose)
+    center_code = models.CharField(max_length=20, null=True, help_text='Cost Center code to be charged')
+    status = models.CharField(choices=STATUS, default='Pending', null=True, max_length=20)
+    advance_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    objective = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user)
+
+
+class Meal(models.Model):
+    no_of_days = models.CharField(choices=MEAL_DAYS, max_length=10, null=True)
+    travel = models.ForeignKey(Travel)
+
+    def __str__(self):
+        return self.no_of_days
+
+
+class Flight(models.Model):
+    travel = models.ForeignKey(Travel)
+    departure_airport = models.CharField(max_length=20, null=True)
+    destination_airport = models.CharField(max_length=20, null=True)
+    departure_date = models.DateField(null=False)
+    destination_date = models.DateField(null=False)
+    flight_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
+    def __str__(self):
+        return self.departure_airport
+
+
+class Road(models.Model):
+    travel = models.ForeignKey(Travel)
+    departure_town = models.CharField(max_length=20, null=True)
+    destination_town = models.CharField(max_length=20, null=True)
+    departure_date = models.DateField()
+    mileage = models.CharField(max_length=11, null=True)
+
+    def __str__(self):
+        return self.departure_date
+
+
+class Accommodation(models.Model):
+    travel = models.ForeignKey(Travel)
+    name = models.CharField(max_length=50, blank=True)
+    check_in_date = models.DateField(null=False)
+    check_out_date = models.DateField(null=False)
+
+    def __str__(self):
+        return self.name
+
+#import pdb
+#pdb.set_trace()
+
+
+class Advance(models.Model):
+    travel = models.ForeignKey(Travel)
+    advance_description = models.ForeignKey(AdvanceDescription, related_name='advance_des')
+    units = models.CharField(max_length=10, validators=[RegexValidator(r'^\d{1,10}$')])
+    rate = models.CharField(max_length=10, validators=[RegexValidator(r'^\d{1,10}$')])
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
+    def __str__(self):
+        return self.units

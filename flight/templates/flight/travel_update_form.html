@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %}{{ block.super }}User Dashboard{% endblock %}
+
+{% block content %}
+                            <div class="page-content">
+                                <div class="container">
+                                    <!-- BEGIN PAGE BREADCRUMBS -->
+                                    <ul class="page-breadcrumb breadcrumb">
+                                        <li>
+                                            <a href="index.html">Home</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#">More</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <span>Form Stuff</span>
+                                        </li>
+                                    </ul>
+                                    <!-- END PAGE BREADCRUMBS -->
+                                    <!-- BEGIN PAGE CONTENT INNER -->
+                                    <div class="page-content-inner">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <!-- BEGIN VALIDATION STATES-->
+                                                <div class="portlet light portlet-fit portlet-form ">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="icon-bubble font-green"></i>
+                                                            <span class="caption-subject font-green bold uppercase">Travel Request</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <!-- BEGIN FORM-->
+                                                         <form role="form" action="" id="form_sample_2" method="post" class="form-horizontal">
+                                {% if form.non_field_errors %}
+                                    <div class="text-danger">
+                                    {{ form.non_field_errors }}
+                                    </div>
+                                  {% endif %}
+                                {% csrf_token %}
+                                {% for f in form %}
+                                 <div class="form-group">
+                                        <label class="control-label col-md-3">{{ f.label }}
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-md-4">
+                                            {{ f }} </div>
+                                        <span class="text-danger">{% if f.errors %}{{ f.errors }}{% endif %}</span>
+                                    </div>
+
+                                {% endfor %}
+                                 <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="submit" class="btn green">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                                                        <!-- END FORM-->
+                                                    </div>
+                                                </div>
+                                                <!-- END VALIDATION STATES-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END PAGE CONTENT INNER -->
+                                </div>
+                            </div>
+
+{% endblock %}

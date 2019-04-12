@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %}{{ block.super }}Delegate Approval{% endblock %}
+
+                             {% block content %}
+                        <!-- BEGIN PAGE BREADCRUMBS -->
+
+<div ng-app="roadapp">
+                                    <ul class="page-breadcrumb breadcrumb">
+                                        <li>
+                                            <a href="{% url 'home' %}">Home</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <span>Send advice</span>
+                                        </li>
+                                    </ul>
+                          <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="page-content-inner" ng-controller="AdviceController">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- BEGIN VALIDATION STATES-->
+                                                <div class="portlet light portlet-fit portlet-form " id="form_wizard_1">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class=" icon-layers font-green"></i>
+                                                            <span class="caption-subject font-green sbold uppercase">Travel Advice</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                     <p ng-bind-html="Message"></p>
+                                                    </div>
+                                                     <script>
+                                                        var postdetails = "{{ postdetails }}";
+
+                                                        </script>
+                                                    <div class="portlet-body">
+                                                        <!-- BEGIN FORM-->
+                                                        <form class="form-horizontal" ng-submit="processForm()">
+                                                            <div class="form-body">
+                                                                 <div class="row">
+                                                                     {% csrf_token %}
+                                                                <div class="form-group">
+                                                <!-- BEGIN SAMPLE TABLE PORTLET--><label class="control-label col-md-3">Location Name
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control"  name="location_name" ng-model="location_name" />
+                                                                                    <span class="help-block"> location name </span>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3"> Hotel name
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                     <input type="text" class="form-control"  name="hotel" ng-model="hotel" />
+                                                                                    <span class="help-block"> Location address </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Address
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+
+                                                                                   <div class="col-md-4">
+                                                                                    <input type="text" class="form-control"  name="address" ng-model="address" />
+                                                                                    <span class="help-block"> hotel address </span>
+                                                                                </div>
+                                                                            <button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addAdvice()">Add</button>
+                                                                            </div>
+                                                                 </div>
+
+                                                                <div class="row">
+                                                                                <div class="portlet-body">
+                                                                        <div class="table-scrollable">
+                                                                            <table class="table table-striped table-bordered table-advance table-hover">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <i class="fa fa-briefcase"></i>Location name </th>
+                                                                                        <th class="hidden-xs">
+                                                                                            <i class="fa fa-user"></i>Hotel name</th>
+                                                                                        <th>
+                                                                                            <i class="fa fa-briefcase"></i> Address </th>
+                                                                                        <th> </th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr ng-repeat="advice in advices track by $index" >
+                                                                                        <td class="highlight" >
+                                                                                            <div class="success"></div>
+                                                                                            <a href="javascript:;"> {{ advice.location }} </a>
+                                                                                        </td>
+                                                                                        <td class="hidden-xs"> {{ advice.hotel }} </td>
+                                                                                        <td> {{ advice.address }} </td>
+                                                                                        <td>
+                                                                                            <a href="" class="btn btn-outline btn-circle btn-sm purple" ng-click="deleteAdvice(advice)">Delete</a>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                    </div>
+                                                            </div>
+
+                                                            <div class="form-actions">
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-3 col-md-9">
+                                                                        <button type="submit" class="btn green">Submit</button>
+                                                                        <img src="/static/assets/layouts/layout3/img/animatedCircle.gif" ng-show="ShowGif" class="logo-default">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <!-- END FORM-->
+                                                    </div>
+                                                </div>
+                                                <!-- END VALIDATION STATES-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div>
+</div>
+                                    {% endblock %}
+
+
+
+                            <!-- END PAGE CONTENT BODY -->
+                            <!-- END CONTENT BODY -->

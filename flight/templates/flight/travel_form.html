@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %} Travel Form {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    Travel Form
+                </header>
+                  <div class="portlet-body form">
+                            <!-- BEGIN FORM-->
+
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<script>
+var postdetails = "{{ request.user.pk }}";
+</script>
+
+<div id="travel-form-first">
+
+        <form id="travelForm" class="horizontal-form" v-on:submit.prevent="validateForm">
+
+                                        <div class="form-body">
+                                            <h3 class="form-section">New Travel Request</h3>
+                                                  <!--<input type='hidden' name='csrfmiddlewaretoken' value='1fbIMxOCZALCSyHulL9dnj7xdbGWpeOh3orP42weSe5J47eC7D6I3648iQlCrG5N' />-->
+                                            <div class="row">
+        
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Band *</label>
+                                                        <select class="form-control" v-model="band" id="id_band" name="band" required>
+                                                            <option value="" selected="selected">---------</option>
+                                                    
+                                                            <option value="1">CEOMD</option>
+                                                            <option value="2">Vice President &amp; Senior Vice President</option>
+                                                            <option value="3">Managers to General Manager</option>
+                                                            <option value="4">Below Managers</option>
+        </select>
+                                                        <span class="help-block"> Select Band </span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Travel type *</label>
+                                                        <select class="form-control" v-model="travel_type" id="id_travel_type" name="travel_type" required>
+                                                                <option value="" selected="selected">---------</option>
+                                                                <option value="National">National</option>
+                                                                <option value="International">International</option>
+        </select>
+                                                        <span class="help-block"> Select type. </span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            </div>
+                                            <!--/row-->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Function *</label>
+                                                        <select class="form-control" v-model="tfunction" id="id_function" name="function" required>
+                                                            <option value="" selected="selected">---------</option>
+
+<option value="1">CEOs Office</option>
+        <option value="2">Customer Service Delivery</option>
+        <option value="3">Enterprise Business</option>
+        <option value="4">HR and Admin</option>
+        <option value="5">Information Technology</option>
+        <option value="6">Internal Assurance</option>
+        <option value="7">Lagos Region Sales</option>
+        <option value="8">Legal and Regulatory</option>
+        <option value="9">Marketing</option>
+        <option value="10">Networks</option>
+        <option value="11">North Region Sales</option>
+        <option value="12">Supply Chain Management</option>
+        <option value="13">Finance</option>
+        <option value="14">HQ Sales</option>
+        <option value="15">South Region Sales</option>
+        <option value="16">West Region Sales</option>       
+ </select>
+                                                        <span class="help-block"> Select function *</span>
+                                                    </div>
+                                                </div>
+                                                <!--<input value="{{ request.user.pk }}" v-model="user" type="hidden">-->
+
+                                                <!--/span-->
+                                              <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Accommodation type *</label>
+                                                        <select class="form-control" v-model="accommodation_type" id="id_accommodation_type" name="accommodation_type" required>
+                                                        <option value="" selected="selected">---------</option>
+                                                        <option value="Hotel">Hotel</option>
+                                                        <option value="Lieu">Lieu</option>
+                                                        </select>
+                                                        <span class="help-block"> Select accommodation type. </span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            </div>
+                                              <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Purpose *</label>
+                                                        <select class="form-control" v-model="purpose" id="id_purpose" name="purpose" required>
+                                                                <option value="" selected="selected">---------</option>
+                                                                <option value="1">Training</option>
+                                                                <option value="2">Relocation</option>
+                                                                <option value="3">Local Business Trip</option>
+                                                                <option value="4">Other Opco Visit</option>
+                                                                </select>
+                                                        <span class="help-block"> Select travel purpose </span>
+                                                    </div>
+                                                </div>
+                                                   <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Trip type *</label>
+                                                        <select class="form-control" v-model="trip_type" id="id_trip_type" name="trip_type" required>
+                                                                <option value="" selected="selected">---------</option>
+                                                                <option value="One Way Flight">One Way Flight</option>
+                                                                <option value="Return Flight">Return Flight</option>
+                                                                <option value="Multiple Flight">Multiple Flight</option>
+                                                                <option value="Road Trip">Road Trip</option>
+                                                        </select>
+                                                        <span class="help-block"> Select trip </span>
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                            <div class="row">
+                                                   <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Objective *</label>
+                                                        <textarea class="form-control" cols="40" v-model="objective" id="id_objective" name="objective" rows="10" required>
+        </textarea>
+                                                        <span class="help-block"> Select objective</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Travel Zone *</label>
+                                                        <select class="form-control" v-model="zone" id="id_zone" name="zone" required>
+                                                                <option value="" selected="selected">---------</option>
+                                                                <option value="Zone A">Zone A</option>
+                                                                <option value="Zone B">Zone B</option>
+                                                                <option value="Zone C">Zone C</option>
+                                                        </select>
+                                                        <span class="help-block"> Select Zone </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <!-- <input type="text" name="center_code" class="form-control" id="center_code_id" > -->
+                                                            <!-- <label class="control-label">Team Travel</label><br> -->
+                                                            <!-- Individual Request <input type="radio" name="group" v-model="checkedNames" class="form-control" checked value="individual"><br>
+                                                            Team Request <input type="radio" name="group" v-model="checkedNames" class="form-control"   value="team"><br>
+                                                            -->
+                                                            <label class="control-label">Team Request</label>
+                                                            <input type="checkbox"  v-model="checked" value="true">
+                                                        </div>
+                                                    </div>
+                                                    
+                                            <div class="col-md-6" v-show="checked == true">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Auuid *</label>
+                                                        <input type="text" placeholder="Enter Auuid" v-model="group.auuid"  class="form-control">
+                                                        <!-- <input-tag :tags.sync="tagsArray" class="form-control"></input-tag> -->
+                                                        <span class="help-block"><button type="button" class="btn btn-info" @click="addAuuid">Validate</button></span>
+                                                    </div>
+                                                </div>
+
+                                        <div class="col-md-6" id="center_code" v-show="purpose == '1'">
+                                            <div class="form-group">
+                                                <label class="control-label"> Center Code</label>
+                                                <input type="text" v-model="center_code" name="center_code" class="form-control" id="center_code_id" >
+                                                <span class="help-block"> Enter center code </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                                
+                                    <!--/row-->
+                                    <!--/row-->
+                                    <div class="table-scrollable" v-show="checked == true">
+                                        <table class="table table-striped table-bordered table-advance table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <i class="fa fa-briefcase"></i> Auuid </th>
+                                                    <th class="hidden-xs">
+                                                        <i class="fa fa-user"></i>Name</th>
+                                                    <th>
+                                                        <i class="fa fa-shopping-cart"></i> Email </th>
+                                                    <th> </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="group in groups">
+                                                    <td class="highlight" >
+                                                        <div class="success"></div>
+                                                        <a href="javascript:;"> [[ group.auuid ]] </a>
+                                                    </td>
+                                                    <td class="hidden-xs"> [[ group.name ]] </td>
+                                                    <td> [[ group.email ]] </td>
+                                                    <td>
+                                                        <!-- <a href="" class="btn btn-outline btn-circle btn-sm purple" @click="removeAuuid(group)">Delete</a> -->
+                                                        <button type="button" class="btn btn-info" @click="removeAuuid(group)">Delete</button>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- <pre>[[ $data ]]</pre> -->
+                                <div class="form-actions left">
+                                    <button @click="validateForm" class="btn btn-info">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                       <!-- <script>
+
+                            //     $(document).ready(function(){
+                            //         $('#center_code').hide();
+                            //         $('#id_purpose').on('change', function() {
+                            //           var name = this.value;
+                            //           if(name==2){
+                            //               $('#center_code').show();
+                            //           }else
+                            //           {
+                            //               $('#center_code').hide();
+                            //           }
+                            //         });
+                            //   });
+                            </script> -->
+                      <!-- END FORM-->
+                  </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

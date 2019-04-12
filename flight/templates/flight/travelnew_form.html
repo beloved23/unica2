@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %} Travel Form {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    Travel Form
+                </header>
+                  <div class="portlet-body form">
+                            <!-- BEGIN FORM-->
+
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div id="travel-form-first">
+<form  method="post" action="{% url 'travel:add_travel' %}" class="horizontal-form">
+
+                                <div class="form-body">
+                                    <h3 class="form-section">New Travel Request</h3>
+                                          {% csrf_token %}
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.band.label }}</label>
+                                                {{ form.band }}
+                                                <span class="help-block"> Select Band </span>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.travel_type.label }}</label>
+                                                {{ form.travel_type }}
+                                                <span class="help-block"> Select type. </span>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
+                                    </div>
+                                    <!--/row-->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.function.label }}</label>
+                                                {{ form.function }}
+                                                <span class="help-block"> Select function </span>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
+                                      <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.accommodation_type.label }}</label>
+                                                {{ form.accommodation_type }}
+                                                <span class="help-block"> Select accommodation type. </span>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
+                                    </div>
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.purpose.label }}</label>
+                                                <select class="form-control" v-model="purpose" id="id_purpose" name="purpose" required>
+                                                        <option value="" selected="selected">---------</option>
+                                                        <option value="2">Training</option>
+                                                        <option value="3">Relocation</option>
+                                                        <option value="4">Local Business Trip</option>
+                                                        <option value="5">Other Opco Visit</option>
+                                                        </select>
+                                                <span class="help-block"> Select travel purpose </span>
+                                            </div>
+                                        </div>
+                                           <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.trip_type.label }}</label>
+                                                {{ form.trip_type }}
+                                                <span class="help-block"> Select trip </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                           <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.objective.label }}</label>
+                                                {{ form.objective }}
+                                                <span class="help-block"> Select objective</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.zone.label }}</label>
+                                                {{ form.zone }}
+                                                <span class="help-block"> Select Zone </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <!-- <input type="text" name="center_code" class="form-control" id="center_code_id" > -->
+                                                    <!-- <label class="control-label">Team Travel</label><br> -->
+                                                    <!-- Individual Request <input type="radio" name="group" v-model="checkedNames" class="form-control" checked value="individual"><br>
+                                                    Team Request <input type="radio" name="group" v-model="checkedNames" class="form-control"   value="team"><br>
+                                                    -->
+                                                    <label class="control-label">Team Request</label>
+                                                    <input type="checkbox" id="checkbox" class="form-control" v-model="checked" value="true">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" v-show="checked == true">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Auuid</label>
+                                                        <input type="text" placeholder="Enter Auuid" v-model="group.auuid" required class="form-control">
+                                                        <!-- <input-tag :tags.sync="tagsArray" class="form-control"></input-tag> -->
+                                                        <span class="help-block"><button type="button" class="btn btn-info" @click="addAuuid">Validate</button></span>
+                                                    </div>
+                                                </div>
+
+                                        <div class="col-md-6" id="center_code" v-show="purpose == '2'">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ form.center_code.label }}</label>
+                                                <input type="text" name="center_code" class="form-control" id="center_code_id" >
+                                                <span class="help-block"> Enter center code </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                                
+                                    <!--/row-->
+                                    <!--/row-->
+                                    <div class="table-scrollable" v-show="checked == true">
+                                        <table class="table table-striped table-bordered table-advance table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <i class="fa fa-briefcase"></i> Auuid </th>
+                                                    <th class="hidden-xs">
+                                                        <i class="fa fa-user"></i>Name</th>
+                                                    <th>
+                                                        <i class="fa fa-shopping-cart"></i> Email </th>
+                                                    <th> </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="group in groups">
+                                                    <td class="highlight" >
+                                                        <div class="success"></div>
+                                                        <a href="javascript:;"> [[ group.auuid ]] </a>
+                                                    </td>
+                                                    <td class="hidden-xs"> [[ group.name ]] </td>
+                                                    <td> [[ group.email ]] </td>
+                                                    <td>
+                                                        <!-- <a href="" class="btn btn-outline btn-circle btn-sm purple" @click="removeAuuid(group)">Delete</a> -->
+                                                        <button type="button" class="btn btn-info" @click="removeAuuid(group)">Delete</button>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <pre>[[ $data ]]</pre>
+                                <div class="form-actions left">
+                                    <button class="btn btn-info">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                       <!-- <script>
+
+                            //     $(document).ready(function(){
+                            //         $('#center_code').hide();
+                            //         $('#id_purpose').on('change', function() {
+                            //           var name = this.value;
+                            //           if(name==2){
+                            //               $('#center_code').show();
+                            //           }else
+                            //           {
+                            //               $('#center_code').hide();
+                            //           }
+                            //         });
+                            //   });
+                            </script> -->
+                      <!-- END FORM-->
+                  </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

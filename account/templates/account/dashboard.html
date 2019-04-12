@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %} User Dashboard {% endblock %}
+
+{% block content %}
+<!-- BEGIN PAGE BREADCRUMBS -->
+                                    <ul class="page-breadcrumb breadcrumb">
+                                        <li>
+                                            <a href="{% url 'account:home' %}">Home</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <span>Dashboard</span>
+                                        </li>
+                                    </ul>
+                                    <!-- END PAGE BREADCRUMBS -->
+                                    <!-- BEGIN PAGE CONTENT INNER -->
+
+                                   <div class="page-content-inner">
+                                        <!--<div class="row">
+                                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                                                <div class="portlet light ">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <span class="caption-subject bold uppercase font-dark">Flight Stats</span>
+                                                            <span class="caption-helper">flight stats...</span>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="#">
+                                                                <i class="icon-cloud-upload"></i>
+                                                            </a>
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="#">
+                                                                <i class="icon-wrench"></i>
+                                                            </a>
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="#">
+                                                                <i class="icon-trash"></i>
+                                                            </a>
+                                                            <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#"> </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div id="dashboard_amchart_2" class="mapChart"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                                                <div class="portlet light ">
+                                                    <div class="portlet-title">
+                                                        <div class="caption ">
+                                                            <span class="caption-subject font-dark bold uppercase">Sales By Region</span>
+                                                            <span class="caption-helper">distance stats...</span>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="btn-group">
+                                                                <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> Actions
+                                                                    <i class="fa fa-angle-down"></i>
+                                                                </a>
+                                                                <ul class="dropdown-menu pull-right">
+                                                                    <li>
+                                                                        <a href="javascript:;"> Option 1</a>
+                                                                    </li>
+                                                                    <li class="divider"> </li>
+                                                                    <li>
+                                                                        <a href="javascript:;">Option 2</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:;">Option 3</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:;">Option 4</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div id="dashboard_amchart_4" class="CSSAnimationChart"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        <div class="row" ng-app="roadapp"  class="ng-cloak">
+                                              {% verbatim %}
+                                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                                                <div class="portlet light " ng-controller="MyApprovalController">
+                                                    <div class="portlet-title tabbable-line">
+                                                        <div class="caption" >
+                                                            <i class="icon-bubbles font-dark hide"></i>
+                                                            <span class="caption-subject font-dark bold uppercase"> My Scheduled List </span>
+                                                        </div>
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="active">
+                                                                <a href="#portlet_comments_1" data-toggle="tab"> Pending </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#portlet_comments_2" data-toggle="tab"> Completed </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="portlet-body"  >
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane active" id="portlet_comments_1">
+                                                                  <input type="text" class="form-control" ng-model="search" placeholder="Search"/>
+                                                                <!-- BEGIN: Comments -->
+                                                                <div class="mt-comments" dir-paginate="rod in approvals|filter:{ status: 'PENDING', ticket: search }|itemsPerPage:7" pagination-id="portlet_comments_1">
+                                                                    <div class="mt-comment">
+                                                                        <div class="mt-comment-img">
+                                                                            <img src="" /> </div>
+                                                                        <div class="mt-comment-body">
+                                                                            <div class="mt-comment-info">
+                                                                                <span class="mt-comment-author" ng-cloak>{{ rod.ticket }}</span>
+                                                                                <span class="mt-comment-date" ng-cloak>{{ rod.date_created }}</span>
+                                                                            </div>
+                                                                            <div class="mt-comment-text" ng-cloak> Pending approval with {{ rod.approval_person_name }} as {{ rod.approval_person_level }} </div>
+                                                                            <div class="mt-comment-details">
+                                                                                <span class="mt-comment-status mt-comment-status-pending">Pending</span>
+                                                                              <!--  <ul class="mt-comment-actions">
+                                                                                    <li>
+                                                                                        <a href="#">Quick Edit</a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a href="#">View</a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a href="#">Delete</a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            --></div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                   
+                                                                
+                                                                </div>
+                                                                <!-- END: Comments -->
+                                                                <dir-pagination-controls
+                                    max-size="10"
+                                    direction-links="true"
+                                    boundary-links="true"
+                                    pagination-id="portlet_comments_1">
+                                </dir-pagination-controls>
+
+
+                                                            </div>
+                                                            <div class="tab-pane" id="portlet_comments_2">
+                                                           <input type="text" class="form-control" ng-model="search" placeholder="Search"/>
+                                                                <!-- BEGIN: Comments -->
+                                                                <div class="mt-comments" dir-paginate="rod in approvals|filter:{ status: 'COMPLETED', ticket: search }|itemsPerPage:7" pagination-id="portlet_comments_2">
+                                                                    <div class="mt-comment">
+                                                                        <div class="mt-comment-img">
+                                                                            <img src="" /> </div>
+                                                                        <div class="mt-comment-body">
+                                                                            <div class="mt-comment-info">
+                                                                                <span class="mt-comment-author" ng-cloak>{{ rod.ticket }}</span>
+                                                                                <span class="mt-comment-date" ng-cloak>{{ rod.date_created }}</span>
+                                                                            </div>
+                                                                            <div class="mt-comment-text"> </div>
+                                                                            <div class="mt-comment-details">
+                                                                                <!--<span class="mt-comment-status mt-comment-status-approved" ng-cloak>Approved by {{ rod.approval_person_name }} as {{ rod.approval_person_level }}</span>-->
+                                                                           <!--     <ul class="mt-comment-actions">
+                                                                                    <li>
+                                                                                        <a href="#">Quick Edit</a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a href="#">View</a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a href="#">Delete</a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                             -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                </div>
+                                                                <dir-pagination-controls
+                                    max-size="10"
+                                    direction-links="true"
+                                    boundary-links="true"
+                                    pagination-id="portlet_comments_2">
+                                </dir-pagination-controls>
+
+                                                                <!-- END: Comments -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 col-sm-12" >
+                                                <div class="portlet light" ng-controller="AdController">
+                                                    <div class="portlet-title tabbable-line">
+                                                        <div class="caption">
+                                                            <i class=" icon-social-twitter font-dark hide"></i>
+                                                            <span class="caption-subject font-dark bold uppercase">Last Broadcast List</span>
+                                                        </div>
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="active">
+                                                                <a href="#tab_actions_pending" data-toggle="tab"> Pending </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#tab_actions_completed" data-toggle="tab"> Completed </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="portlet-body">
+
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane active" id="tab_actions_pending">
+                                                                <input type="text" class="form-control" ng-model="search" placeholder="Search (Ticket Id)"/>
+                                                                <!-- BEGIN: Actions -->
+                                                                <div class="mt-actions" paginate-id="tab_actions_pending"  dir-paginate="rod in approvals|filter:{ status: 'PENDING', ticket: search }|itemsPerPage:7">
+                                                                    <div class="mt-action">
+                                                                        <div class="mt-action-img">
+                                                                            <a href="{{ rod.url }}" ><button type="button" class="btn btn-outline green btn-sm">View</button></a></div>
+                                                                        <div class="mt-action-body">
+                                                                            <div class="mt-action-row">
+                                                                                <div class="mt-action-info ">
+                                                                                    <div class="mt-action-icon ">
+                                                                                        <i></i>
+                                                                                    </div>
+                                                                                    <div class="mt-action-details ">
+                                                                                             <span class="mt-action-author" ng-cloak>{{ rod.firstname }} {{ rod.lastname }}</span>
+                                                                                        <p class="mt-action-desc" ng-cloak>{{ rod.ticket }}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="mt-action-datetime ">
+                                                                                    <span class="mt-action-date" ng-cloak>{{ rod.date_created }}</span>
+                                                                                    <span class="mt-action-dot bg-green"></span>
+                                                                                    <span class="mt=action-time"></span>
+                                                                                </div>
+
+                                                                                <!--<div class="mt-action-buttons ">-->
+                                                                                    <!--<div class="btn-group btn-group-circle">-->
+                                                                                        <!--<button type="button" class="btn btn-outline green btn-sm"><a href='{{ rod.host }}approve-travel?reference={{ rod.reference }}&approval={{ rod.approval_person_level }}'>Appove</a></button>-->
+                                                                                        <!--<button type="button" class="btn btn-outline red btn-sm"><a href ='{{ rod.host }}reject-travel?reference={{ rod.reference }}&reject={{ rod.approval_person_level }}'>Reject</a></button>-->
+                                                                                    <!--</div>-->
+                                                                                <!--</div>-->
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                  
+                                                                
+                                                                    
+                                                                    
+                                                                </div>
+                                                                      <dir-pagination-controls
+                                    max-size="10"
+                                    direction-links="true"
+                                    boundary-links="true"
+                                    pagination-id="tab_actions_pending">
+                                </dir-pagination-controls>
+                                                                <!-- END: Actions -->
+                                                            </div>
+                                                            <div class="tab-pane" id="tab_actions_completed">
+                                                                <!-- BEGIN:Completed-->
+                                                                <input type="text" class="form-control" ng-model="search" placeholder="Search (Ticket Id)"/>
+                                                                <div class="mt-actions"  dir-paginate="rod in approvals|filter:{ status: 'COMPLETED', ticket: search }|itemsPerPage:7" pagination-id="tab_actions_completed" >
+
+                                                                    <div class="mt-action">
+                                                                        <div class="mt-action-img">
+                                                                            <img src="" /> </div>
+                                                                        <div class="mt-action-body">
+                                                                            <div class="mt-action-row">
+                                                                                <div class="mt-action-info ">
+                                                                                    <div class="mt-action-icon ">
+                                                                                        <i class="icon-action-redo"></i>
+                                                                                    </div>
+                                                                                    <div class="mt-action-details ">
+                                                                                        <span class="mt-action-author" ng-cloak>{{ rod.firstname }} {{ rod.lastname }}</span>
+                                                                                        <p class="mt-action-desc" ng-cloak>{{ rod.ticket }}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="mt-action-datetime ">
+                                                                                    <span class="mt-action-date" ng-cloak>{{ rod.date_created }}</span>
+                                                                                    <span class="mt-action-dot bg-red"></span>
+                                                                                    <span class="mt=action-time"></span>
+                                                                                </div>
+                                                                                <div class="mt-action-buttons ">
+                                                                                    <div class="btn-group btn-group-circle">
+                                                                                        <!--<button type="button" class="btn btn-outline {{ rod.color }} btn-sm">{{ rod.is_approved }}</button>-->
+
+                                                                                        <span class="label label-{{ rod.color }}"> {{ rod.is_approved }} </span>
+                                                                                    
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                       
+                                                     
+                                                
+                                                                    <!-- END: Completed -->
+                                                                    
+                                                                </div>
+                                                                <dir-pagination-controls
+                                    max-size="10"
+                                    direction-links="true"
+                                    boundary-links="true"
+                                    pagination-id="tab_actions_completed">
+                                </dir-pagination-controls>
+                                                                 
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>{% endverbatim %}
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                 </div>
+                                    <!-- END PAGE CONTENT INNER -->
+
+
+
+                                     <!-- BEGIN CORE PLUGINS -->
+        <script src="/static/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/static/assets/global/plugins/moment.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/serial.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/pie.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/radar.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/themes/light.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/themes/patterns.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amcharts/themes/chalk.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/ammap/ammap.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/ammap/maps/js/worldLow.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/amcharts/amstockcharts/amstock.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+        <!--<script src="/static/assets/global/plugins/horizontal-timeline/horizontal-timeline.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>-->
+        <!--<script src="/static/assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
+        <script src="/static/assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>-->
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="/static/assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <script src="/static/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="/static/assets/layouts/layout3/scripts/layout.min.js" type="text/javascript"></script>
+        <!--<script src="/static/assets/layouts/layout3/scripts/demo.min.js" type="text/javascript"></script>-->
+        <!--<script src="/static/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+        <script src="/static/assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>-->
+
+        
+
+                
+{% endblock %}

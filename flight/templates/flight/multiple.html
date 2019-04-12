@@ -1,0 +1,573 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %}{{ block.super }}User Dashboard{% endblock %}
+
+                             {% block content %}
+                        <!-- BEGIN PAGE BREADCRUMBS -->
+<div ng-app="roadapp">
+                                    <ul class="page-breadcrumb breadcrumb">
+                                        <li>
+                                            <a href="index.html">Home</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <span>Dashboard</span>
+                                        </li>
+                                    </ul>
+                          <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="page-content-inner" ng-controller="MultipleController">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="portlet light " id="form_wizard_1">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class=" icon-layers font-red"></i>
+                                                            <span class="caption-subject font-red bold uppercase"> Multiple Flight Trip
+                                                                <span class="step-title"> Step 1 of 4 </span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                                <i class="icon-cloud-upload"></i>
+                                                            </a>
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                                <i class="icon-wrench"></i>
+                                                            </a>
+                                                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                                <i class="icon-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                     <p ng-bind-html="Message"></p>
+                                                    </div>
+                                                    <div class="portlet-body form">
+                                                        <form class="form-horizontal" ng-show="showTheForm" id="submit_form" ng-submit="processForm()">
+                                                            <div class="form-wizard">
+                                                                <div class="form-body">
+                                                                    <ul class="nav nav-pills nav-justified steps">
+                                                                        <li>
+                                                                            <a href="#tab1" data-toggle="tab" class="step">
+                                                                                <span class="number"> 1 </span>
+                                                                                <span class="desc">
+                                                                                    <i class="fa fa-check"></i> Trip </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#tab2" data-toggle="tab" class="step">
+                                                                                <span class="number"> 2 </span>
+                                                                                <span class="desc">
+                                                                                    <i class="fa fa-check"></i> Accommodation </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#tab3" data-toggle="tab" class="step">
+                                                                                <span class="number"> 3 </span>
+                                                                                <span class="desc">
+                                                                                    <i class="fa fa-check"></i> Advance </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#tab4" data-toggle="tab" class="step">
+                                                                                <span class="number"> 4 </span>
+                                                                                <span class="desc">
+                                                                                    <i class="fa fa-check"></i> Preview </span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <script>
+                                                                            var postdetails = "{{ postdetails }}";
+                                                                            var accomodation_cost = "{{ accomodation_cost }}";
+                                                                            var purpose = "{{ travel.purpose }}";
+                                                                            var group  = "{{ travel.team_len }}";
+                                                                            var check = "{{ travel.is_team }}";
+                                                                            var travel_type = "{{ travel.travel_type }}";
+                                                                    </script>
+                                                                    <div id="bar" class="progress progress-striped" role="progressbar">
+                                                                        <div class="progress-bar progress-bar-success"> </div>
+                                                                    </div>
+                                                                    <div class="tab-content">
+                                                                        <!--<div class="alert alert-danger display-none">
+                                                                            <button class="close" data-dismiss="alert"></button> You have some form errors. Please check below. </div>
+                                                                        <div class="alert alert-success display-none">
+                                                                            <button class="close" data-dismiss="alert"></button> Your form validation is successful! </div>-->
+                                                                        <div class="tab-pane active" id="tab1">
+                                                                            <h3 class="block">Flight details</h3>
+                                                                            {% csrf_token %}
+                                                                            {% verbatim %}
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Departure Location*
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control"  name="departure_airport" ng-model="newMultiple.departure_airport"/>
+                                                                                    <span class="help-block"> Enter departure </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Departure date
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control input-medium date-picker"  name="departure_date" ng-model="newMultiple.departure_date"/>
+                                                                                    <span class="help-block"> Departure Date </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Destination Location*
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                   <input type="text" class="form-control"   name="destination_airport" ng-model="newMultiple.destination_airport"/>
+                                                                                    <span class="help-block"> Enter destination </span>
+                                                                                </div>
+                                                                                <button ng-show="ShowAddbutton" type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addMultiple()">Add</button>
+
+                                                                            </div>
+                                                                            <!--
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Destination date
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control input-medium date-picker"  name="arrival_date" ng-model="newMultiple.arrival_date"/>
+                                                                                    <span class="help-block"> Arrival Date </span>
+                                                                                </div>
+                                                                            </div>-->
+                                                                             <div class="form-group" ng-show="ShowFlightCost">
+                                                                                <label class="control-label col-md-3">Flight Cost
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4" >
+                                                                                   <input type="text" class="form-control"  name="flight_cost" ng-model="flight_cost"/>
+                                                                                    <span class="help-block"> Flight Cost</span>
+                                                                                </div>
+                                                                                 <button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addMultiple()">Add</button>
+
+
+                                                                            </div>
+
+
+                                                                                <div class="row">
+                                                                                <div class="portlet-body">
+                                                                        <div class="table-scrollable">
+                                                                            <table class="table table-striped table-bordered table-advance table-hover">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <i class="fa fa-briefcase"></i>Departure Airport</th>
+                                                                                        <th class="hidden-xs">
+                                                                                            <i class="fa fa-user"></i>Flight Date</th>
+                                                                                        <th>
+                                                                                            <i class="fa fa-shopping-cart"></i> Destination Airport </th>
+                                                                                        <th> <i class="fa fa-shopping-cart"></i> cost </th></th>
+                                                                                        <th> <i class="fa fa-shopping-cart"></i> Action</th></th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr ng-repeat="flight in multiple track by $index" >
+                                                                                        <td class="highlight" >
+                                                                                            <div class="success"></div>
+                                                                                            <a href="javascript:;"> {{ flight.departure_airport }} </a>
+                                                                                        </td>
+                                                                                        <td class="hidden-xs"> {{ flight.departure_date }} </td>
+                                                                                        <td> {{ flight.destination_airport }} </td>
+                                                                                        <td> {{ flight.flight_cost }} </td>
+                                                                                        <td>
+                                                                                            <a href="" class="btn btn-outline btn-circle btn-sm purple" ng-click="deleteMultiple(flight)">Delete</a>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                    </div>
+                                                                        </div>
+
+ <div class="tab-pane" id="tab2">
+                                                                            <h3 class="block">Accommodation</h3>
+                                                                            <div class="row">
+                                                                            <div class="form-group">
+
+                                                <!-- BEGIN SAMPLE TABLE PORTLET--><label class="control-label col-md-3">Destination Location
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control"  name="name" ng-model="newAccommodation.name" />
+                                                                                    <span class="help-block"> Provide destination location </span>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3"> Check in date
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <div class="col-md-4">
+                                                                                    <input type="text" class="form-control input-medium date-picker"  name="check_in_date" ng-model="newAccommodation.check_in_date" />
+                                                                                    <span class="help-block"> Check in date </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-md-3">Check out date
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+
+                                                                                   <div class="col-md-4">
+                                                                                    <input type="text" class="form-control input-medium date-picker"  name="check_out_date" ng-model="newAccommodation.check_out_date" />
+                                                                                    <span class="help-block"> Check out date </span>
+                                                                                </div>
+                                                                            <!--<button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addAccommodation()">Add</button>-->
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-offset-3 col-md-9">
+                                                                             <button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addAccommodation()">Add</button>
+                                                                        </div>
+                                                                        <p></p>
+                                                                            <div class="row">
+                                                                                <div class="portlet-body">
+                                                                        <div class="table-scrollable">
+                                                                            <table class="table table-striped table-bordered table-advance table-hover">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <i class="fa fa-briefcase"></i> Destination Location </th>
+                                                                                        <th class="hidden-xs">
+                                                                                            <i class="fa fa-user"></i>Check in date</th>
+                                                                                        <th>
+                                                                                            <i class="fa fa-shopping-cart"></i> Check out date </th>
+                                                                                        <th> </th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr ng-repeat="accommodation in accommodations track by $index" >
+                                                                                        <td class="highlight" >
+                                                                                            <div class="success"></div>
+                                                                                            <a href="javascript:;"> {{ accommodation.name }} </a>
+                                                                                        </td>
+                                                                                        <td class="hidden-xs"> {{ accommodation.check_in_date }} </td>
+                                                                                        <td> {{ accommodation.check_out_date }} </td>
+                                                                                        <td>
+                                                                                            <a href="" class="btn btn-outline btn-circle btn-sm purple" ng-click="deleteAccommodation(student)">Delete</a>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                    </div>
+                                                    </div>
+                                                                       <div class="tab-pane" id="tab3">
+                                                            <h3 class="block">Advance</h3>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">Advance Description
+                                                                    <span class="required"> * </span>
+                                                                </label>
+                                                                <div class="col-md-4">
+                                                            <select name="advance_description" class="form-control"   ng-model="newAdvance.advance_description" >
+                                                                <option  value="{{ x.name }}" ng-repeat="x in adv">{{ x.name }}</option>
+                                                            </select>
+                                                                    <span class="help-block"> </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">Units
+                                                                    <span class="required"> * </span>
+                                                                </label>
+                                                                <div class="col-md-4">
+                                                                    <input type="number" class="form-control"  name="units" ng-model="newAdvance.units"/>
+                                                                    <span class="help-block"> </span>
+                                                                </div>
+                                                            </div>
+
+                                                                                     <div class="form-group">
+                                                                <label class="control-label col-md-3">Currency:</label>
+                                                                <div class="col-md-4">
+                                                                    <select ng-model="newAdvance.currency" class="form-control" >
+                                                                        <option value="NGN">Naira (₦)</option>
+                                                                        <option value="USD">Dollars ($)</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">Rate
+                                                                    <span class="required"> * </span>
+                                                                </label>
+                                                                <div class="col-md-4">
+                                                                    <input type="number" placeholder=""  class="form-control" name="rate" ng-model="newAdvance.rate" />
+                                                                    <span class="help-block"> </span>
+                                                                </div>
+                                                                <!--<button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addAdvance()">Add</button>-->
+                                                            </div>
+
+                                                                     <div class="col-md-offset-3 col-md-9">
+                                                                             <button type="button" class="btn btn-primary waves-effect waves-light m-r-30" ng-click="addAdvance()">Add</button>
+                                                                        </div>
+                                                                        <p></p>
+
+                                                            <div class="row">
+                                                                                <div class="portlet-body">
+                                                        <div class="table-scrollable">
+                                                            <table class="table table-striped table-bordered table-advance table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                             Advance Description</th>
+                                                                        <th class="hidden-xs">
+                                                                            Units </th>
+                                                                        <th>
+                                                                            Rate </th>
+                                                                        <th>
+                                                                            Cost </th>
+                                                                        <th> Action </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="advance in advances track by $index" >
+                                                                        <td class="highlight" >
+                                                                            <div class="success"></div>
+                                                                            <a href="javascript:;"> {{ advance.advance_description }} </a>
+                                                                        </td>
+                                                                        <td class="hidden-xs"> {{ advance.units }} </td>
+                                                                         <td> {{ advance.rate }} </td>
+                                                                        <td >{{ advance.currency }}{{ advance.cost }}</td>
+                                                                        <td>
+                                                                            <a href="" class="btn btn-outline btn-circle btn-sm purple" ng-click="deleteAdvance(advance)">Delete</a>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+
+                                                    </div>
+                                                        </div>
+
+                                                                          <div class="tab-pane" id="tab4">
+    <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- BEGIN SAMPLE TABLE PORTLET-->
+                                                        <div class="portlet box green">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="fa fa-picture"></i>Flight </div>
+                                                        <div class="tools">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div class="table-scrollable">
+                                                            <table class="table table-condensed table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                    <th>
+                                                                            <i class="fa fa-briefcase"></i>Enter Departure</th>
+                                                                        <th class="hidden-xs">
+                                                                            <i class="fa fa-user"></i>Destination Date</th>
+                                                                        <th>
+                                                                            <i class="fa fa-shopping-cart"></i> Destination Airport </th>
+                                                                        <th> <i class="fa fa-shopping-cart"></i> cost </th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="flight in multiple track by $index">
+                                                                         <td class="highlight" >
+                                                                                            <div class="success"></div>
+                                                                                            <a href="javascript:;"> {{ flight.departure_airport }} </a>
+                                                                                        </td>
+                                                                                        <td class="hidden-xs"> {{ flight.departure_date }} </td>
+                                                                                        <td> {{ flight.destination_airport }} </td>
+
+                                                                                        <td> {{ flight.flight_cost }} </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- END SAMPLE TABLE PORTLET-->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <!-- BEGIN CONDENSED TABLE PORTLET-->
+                                                <div class="portlet box green">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="fa fa-picture"></i>Accommodation </div>
+                                                        <div class="tools">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div class="table-scrollable">
+                                                            <table class="table table-condensed table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th> Destination Location </th>
+                                                                        <th> Check in date </th>
+                                                                        <th> Check out date </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="accommodation in accommodations track by $index">
+                                                                        <td> {{ accommodation.name }} </td>
+                                                                        <td> {{ accommodation.check_in_date }} </td>
+                                                                        <td> {{ accommodation.check_out_date }} </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- END CONDENSED TABLE PORTLET-->
+                                            </div>
+                                        </div>
+                                                                          <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- BEGIN SAMPLE TABLE PORTLET-->
+                                                <div class="portlet box green">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="icon-settings font-red"></i>
+                                                            Advance
+                                                        </div>
+                                                        <div class="actions">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div class="table-scrollable">
+                                                            <table class="table table-condensed table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th> Advance Description</th>
+                                                                        <th> Unit </th>
+                                                                        <th> Rate </th>
+                                                                        <th> Cost </th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="advance in advances track by $index">
+                                                                        <td> {{ advance.advance_description }} </td>
+                                                                        <td> {{ advance.units }} </td>
+                                                                        <td> {{ advance.rate }} </td>
+                                                                        <td> {{ advance.currency }}{{ advance.cost }} </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- END SAMPLE TABLE PORTLET-->
+                                            </div>
+
+                                                                        <div class="col-md-6">
+                                                                                <div class="portlet box green" ng-show="showGroup">
+                                                                                        <div class="portlet-title">
+                                                                                            <div class="caption">
+                                                                                                <i class="icon-settings font-red"></i>
+                                                                                                Team members
+                                                                                            </div>
+                                                                                            <div class="actions">
+                                    
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="portlet-body">
+                                                                                            <div class="table-scrollable">
+                                                                                                <table class="table table-condensed table-hover">
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th> Auuid</th>
+                                                                                                            <th> Name </th>
+                                                                                                            <th> Email </th>
+                                                                                        
+                                                                                                    </tr>
+                                                                                                    </thead>
+                                                                                                    <tbody>
+                                                                                                        <tr ng-repeat="group in groups track by $index">
+                                                                                                            <td> {{ group.auuid }} </td>
+                                                                                                            <td> {{ group.name }} </td>
+                                                                                                            <td> {{ group.email }} </td>
+                                                                                                          
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>        
+                                                                        
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="well">
+                                                                                <div class="row static-info align-reverse" ng-show="ShowFlight" >
+                                                                                    <div class="col-md-8 name"> Estimated Total Flight cost: </div>
+                                                                                    <div class="col-md-3 value">₦{{ Currency(getFlightTotal()) }} </div>
+                                                                                </div>
+                                                                                <div class="row static-info align-reverse">
+                                                                                    <div class="col-md-8 name"> Estimated Accommodation(₦): </div>
+                                                                                    <div class="col-md-3 value">{{ ShowNaira }}{{ Currency(getNairaTotal()) }}</div>
+                                                                                    <div class="col-md-8 name"> Accommodation($): </div>
+                                                                                    <div class="col-md-3 value">{{ ShowDollar }}{{ Currency(getDollarTotal()) }}</div>
+
+                                                                                </div>
+                                                                                <div class="row static-info align-reverse">
+                                                                                    <div class="col-md-8 name"> Advance (₦): </div>
+                                                                                    <div class="col-md-3 value"> {{ Currency(getAdvanceTotal().Naira) }} </div>
+                                                                                    <div class="col-md-8 name"> Advance ($): </div>
+                                                                                    <div class="col-md-3 value"> {{ Currency(getAdvanceTotal().Dollar) }}</div>
+                                                                                </div>
+                                                                                <!--<div class="row static-info align-reverse">
+                                                                                    <div class="col-md-8 name"> Estimated Total (₦): </div>
+                                                                                    <div class="col-md-3 value"> {{ Currency(parseFloat(getFlightTotal()) +  parseFloat(getNairaTotal()) + parseFloat(getAdvanceTotal().Naira)) }} </div>
+                                                                                </div>
+                                                                                <div class="row static-info align-reverse">
+                                                                                    <div class="col-md-8 name"> Estimated Total ($): </div>
+                                                                                    <div class="col-md-3 value"> {{ Currency(getDollarTotal() + getAdvanceTotal().Dollar) }} </div>
+                                                                                </div>-->
+                                                                            </div>
+                                                                        </div>
+                                                                         </div>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="form-actions">
+                                                                    <div class="row">
+                                                                        <div class="col-md-offset-3 col-md-9">
+                                                                            <a href="javascript:;" class="btn default button-previous">
+                                                                                <i class="fa fa-angle-left"></i> Back </a>
+                                                                            <a href="javascript:;" class="btn btn-outline green button-next"> Continue
+                                                                                <i class="fa fa-angle-right"></i>
+                                                                            </a>
+                                                                             <button type="submit" name="ftbsubmit" class="btn green button-submit">
+                                                                            <span class="glyphicon glyphicon-flash"></span> Submit!
+                                                                          </button>
+                                                                             <img src="/static/assets/layouts/layout3/img/animatedCircle.gif" ng-show="ShowGif" class="logo-default">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div>
+</div>
+
+  {% endverbatim %}
+<!-- END PAGE CONTENT INNER -->
+                                    {% endblock %}
+
+
+
+                            <!-- END PAGE CONTENT BODY -->
+                            <!-- END CONTENT BODY -->

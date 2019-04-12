@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+  web:
+    build: .
+    command: gunicorn newunica.wsgi -b 0.0.0.0:9005 \
+     --workers=5 -t 2300 -k gevent \
+     --worker-connections 100
+    volumes:
+      - .:/code
+    ports:
+      - "9005:9005"

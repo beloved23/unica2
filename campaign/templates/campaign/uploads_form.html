@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %} Broadcast Form {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+
+                            <!-- BEGIN FORM-->
+                      <div class="row" id="dropzone">
+                                            <div class="col-md-12">
+                                                <!-- BEGIN PORTLET-->
+                                                <div class="portlet box red">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="fa fa-group"></i>Upload Message Base </div>
+                                                        <div class="tools">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body form">
+                                                        <!-- BEGIN FORM-->
+                                                        <form action="" method="post" class="form-horizontal form-bordered">
+                                                            {% if form.errors %}
+                                                    {% for field in form %}
+                                                        {% for error in field.errors %}
+                                                            <div class="alert alert-danger">
+                                                                <strong>{{ error|escape }}</strong>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                    {% for error in form.non_field_errors %}
+                                                        <div class="alert alert-danger">
+                                                            <strong>{{ error|escape }}</strong>
+                                                        </div>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                            {% csrf_token %}
+                                                            <div class="form-body form">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Name</label>
+                                                                    <div class="col-md-3">
+                                                                         {{ form.name }}
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" name="name_id" id="name_id">
+                                                                <input type="hidden" name="recipient_count" id="recipient_count">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">File Upload</label>
+                                                                    <div class="col-md-3">
+                                                                        <div class="input-group dropzone" id="formzone" action="/campaign/import/">
+                                                                               <!--<vue-dropzone id="drop1" ref="dropzone" :options="dropOptions"  @vdropzone-success="afterComplete"></vue-dropzone>-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                                         <div class="form-actions left">
+                                    <button class="btn btn-info red">Submit</button>
+                                </div>
+
+                                                        <!-- END FORM-->
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- END PORTLET-->
+                                            </div>
+                                        </div>
+
+
+        </div>
+    </div>
+
+<script>
+     Dropzone.options.formzone = {
+            paramName: "file",
+            maxFilesize: 150,
+            uploadMultiple: true,
+            acceptedFiles: '.txt, .csv',
+            addRemoveLinks: true,
+            timeout: 500000,
+            maxFiles: 1,
+            init: function () {
+                    this.on("success", function (file, response) {
+                        $('#name_id').val(response.Message);
+                        $('#recipient_count').val(response.Count);
+                        //$.notify('File uploaded successfully', 'success');
+                    });
+                    this.on("error", function (file, response) {
+                        console.log(response);
+                    });
+                }
+        }
+</script>
+
+
+{% endblock %}

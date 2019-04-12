@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %}{{ block.super }}404{% endblock %}
+
+{% block content %}
+
+                                    <div class="page-content-inner">
+                                        <div class="row">
+                                            <div class="col-md-12 page-500">
+                                                <div class=" number font-red"> 500 </div>
+                                                <div class=" details">
+                                                    <h3>Oops! Something went wrong.</h3>
+                                                    <p> We are fixing it! Please come back in a while.
+                                                        <br/> </p>
+                                                    <p>
+                                                        <a href="{% url 'home' %}" class="btn red btn-outline"> Return home </a>
+                                                        <br> </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END PAGE CONTENT INNER -->
+
+{% endblock %}

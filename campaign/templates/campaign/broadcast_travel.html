@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load staticfiles static %}
+{% block title %}{{ block.super }}User Dashboard{% endblock %}
+
+                             {% block content %}
+                        <!-- BEGIN PAGE BREADCRUMBS -->
+<div>
+                                    <ul class="page-breadcrumb breadcrumb">
+                                        <li>
+                                            <a href="{% url 'home' %}">Home</a>
+                                            <i class="fa fa-circle"></i>
+                                        </li>
+                                        <li>
+                                            <span>All Travel Requests</span>
+                                        </li>
+                                    </ul>
+                          <!-- BEGIN PAGE CONTENT INNER -->
+                          <script>
+                                var postdetails = "{{ request.user.pk }}";
+                          </script>
+    <div class="page-content-inner" >
+        <div class="row">
+                                            <div class="col-md-12">
+                                                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+
+                                                <!-- END EXAMPLE TABLE PORTLET-->
+                                                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                                                <div class="portlet box red">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <i class="fa fa-globe"></i> Requested Travels</div>
+                                                        <div class="tools"> </div>
+                                                    </div>
+                                                    <div class="portlet-body" id="Details">
+                                                           
+                                                        <table class="table table-striped table-bordered table-hover" id="sample_2">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th> Ticket No. </th>
+                                                                    <th> Travel Type</th>
+                                                                    <th> Trip Type </th>
+                                                                    <th> Purpose </th>
+                                                                    <th> Approval level </th>
+                                                                    <th> Date Created </th>
+                                        
+                                                                    <th> Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!--<tr dir-paginate="travel in travels track by $index|filter:content|orderBy:'expiration_date'|itemsPerPage:20">-->
+                                                                {% for travel in travels %}
+                                                                <tr>
+                                                                    <td> {{ travel.ticket_no }} </td>
+                                                                    <td> {{ travel.travel_type }} </td>
+                                                                    <td> {{ travel.trip_type }} </td>
+                                                                    <td> {{ travel.purpose }} </td>
+                                                                    <td> {{ travel.approval_level }}</td>
+                                                                    <td> {{ travel.date_created | date:"D, d M, Y" }}</td>
+                                                                   
+                                                                    {% if travel.status == 'Pending' %}
+
+                            <td><a href="{% url  'travel:travel_request' travel.pk %}"><button type="button" class="btn btn-primary btn-xs">Continue</button></a> <button type="button" @click="deleteTravel({{travel.pk}})" class="btn btn-primary btn-xs">Del</button></td>
+
+                                                                    {% elif user.is_superuser %}
+
+                                                                    <td><a href="{{ travel.get_detail_url}}" ><button type="button" class="btn btn-primary btn-xs">View</button> </a><a href="{{ travel.get_edit_url }}"><button type="button" class="btn btn-primary btn-xs">Edit</button> </a><button type="button" @click="deleteTravel({{travel.pk}})" class="btn btn-primary btn-xs">Delete</button>
+                                                                    <a href="{% url 'travel:travel_advice' travel.pk %}"><button type="button" class="btn btn-primary btn-xs">Advice</button> </a></td>
+
+                                                                    {% else %}
+
+                                                                    <td><a href="{{ travel.get_detail_url}}" ><button type="button" class="btn btn-primary btn-xs">View</button> </a></td>
+
+                                                                    {% endif %}
+
+                                                                </tr>
+
+                                                            {% endfor %}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- END EXAMPLE TABLE PORTLET-->
+                                            </div>
+                                        </div>
+
+     </div>
+</div>
+
+<!-- END PAGE CONTENT INNER -->
+{% endblock %}

@@ -1,0 +1,309 @@
+import collections
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
+from forms import TravelForm, RoadForm
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from models import *
+import datetime
+import json
+# Create your views here.
+from airteltravel.utils import *
+
+class CreateTravel(LoginRequiredMixin, CreateView):
+    model = Travel
+    form_class = TravelForm
+    #def get_form_kwargs(self):
+    #    # pass "user" keyword argument with the current user to your form
+    #    kwargs = super(CreateTravel, self).get_form_kwargs()
+    #    # kwargs['user'] = self.request.user
+    #    # kwargs['job'] = get_request_params('pk', **kwargs)
+    #    return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        #form.instance.job = Travel.objects.get(pk=self.kwargs['pk'])
+        form.save()
+        messages.success(self.request, 'Your ticket id has been created, kindly fill the trip details!')
+        return super(CreateTravel, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('travel:travel_request', args=(self.object.id,))
+
+
+def list_travel_request(request):
+    pass
+
+@login_required
+def travel_trip(request, pk):
+    template = 'flight/road.html'
+    #form = RoadForm(request.POST, travel_id=pk)
+    try:
+        trip_type=Travel.objects.get(pk=pk)
+    except Travel.DoesNotExist:
+        return redirect('travel:add_travel')
+    #if trip_type.status=='Completed':
+    #    return redirect('travel:add_travel')
+    if trip_type.trip_type == 'Road Trip':
+        print 'testing'
+        template = 'flight/road.html'
+    elif trip_type.trip_type == 'One Way':
+        print 'one way'
+        template = 'flight/oneway.html'
+    elif trip_type.trip_type== 'Multiple Flight':
+        print 'multiple'
+        template = 'flight/multiple.html'
+    elif trip_type.trip_type == 'Return Flight':
+        print 'return'
+        template = 'flight/return.html'
+    purpose = Purpose.objects.all()
+    band = Band.objects.get(name=trip_type.band)
+    cost = AccommodationCost.objects.get(band=band, type=trip_type.travel_type, zone=trip_type.zone)
+    context = {'postdetails' : pk,'travel': trip_type.travel_type, 'purpose': purpose, 'accomodation_cost': cost.cost }
+    return render(request, template, context)
+
+
+@login_required
+def road_trip(request):
+    if request.method=='POST':
+        result = request.POST
+        print result
+        departure_location = result['departure_location']
+        destination_location = result['destination_location']
+        mileage = result['mileage']
+        accommodation=result['accommodation']
+        departure_date = datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        advance = result['advance']
+        post_details = result['postdetails']
+        travel=Travel.objects.get(pk=post_details)
+        _road=Road.objects.create(travel=travel, departure_town=departure_location, destination_town=destination_location, mileage=mileage,departure_date=departure_date)
+        accommodation_list = json.loads(accommodation)
+        advance_list=json.loads(advance)
+        for res in accommodation_list:
+            name = res['name']
+            check_in_date = datetime.datetime.strptime(res['check_in_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+            check_out_date = datetime.datetime.strptime(res['check_out_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+            Accommodation.objects.create(travel=travel, name=name, check_in_date=check_in_date, check_out_date=check_out_date)
+
+        for res in advance_list:
+            advance_description = res['advance_description']
+            advance = AdvanceDescription.objects.get(name=advance_description)
+            units = res['units']
+            rate = res['rate']
+            cost = res['cost']
+            Advance.objects.create(travel=travel,advance_description=advance, units=units, rate=rate, cost=cost)
+        travel.status = 'Completed'
+        travel.reference = my_random_string(6)
+        travel.approval_level = road_map_list[0] #line manager is always the first to approve
+        travel.save()
+        # call function
+        road_trip_mapping(request.user, travel.reference, 0)
+        # #look up who will be in charge of the request and process mail
+        # subject = 'Travel Request | Airtel Travel'
+        # email_template = 'flight/approval-request.html'
+        # to = request.user.email #change this part to the conrresponding email (e.g: line manager email)
+        # from_email = "Airtel Travel <hello@airtel.ng>"
+        # context_dict = {'travel': travel, 'user': request.user, 'host': request.META['HTTP_HOST']}
+        # send_email(subject, email_template, [to, ], from_email, context_dict)
+        # #messages.success(request, 'Your request has been logged! Please check your email for update on approval')
+        # #logger.debug(request.POST)
+        # #return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('home'))
+
+
+@login_required
+def one_way_trip(request):
+    if request.method=='POST':
+        result = request.POST
+        print result
+        departure_location = result['departure_location']
+        destination_location = result['destination_location']
+        flight_cost = result['flight_cost']
+        departure_date = datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        arrival_date = datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        advance = result['advance']
+        accommodation = result['accommodation']
+        post_details = result['postdetails']
+        travel=Travel.objects.get(pk=post_details)
+        Flight.objects.create(travel=travel, departure_airport=departure_location, destination_airport=destination_location, departure_date=departure_date, destination_date=arrival_date, flight_cost=flight_cost)
+        accommodation_list = json.loads(accommodation)
+        advance_list = json.loads(advance)
+        for res in accommodation_list:
+            name = res['name']
+            check_in_date = datetime.datetime.strptime(res['check_in_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+            check_out_date = datetime.datetime.strptime(res['check_out_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+            Accommodation.objects.create(travel=travel, name=name, check_in_date=check_in_date,
+                                         check_out_date=check_out_date)
+        for res in advance_list:
+            advance_description = res['advance_description']
+            advance = AdvanceDescription.objects.get(name=advance_description)
+            units = res['units']
+            rate = res['rate']
+            cost = res['cost']
+            currency= res['currency']
+            Advance.objects.create(travel=travel, advance_description=advance, units=units, rate=rate,currency=currency, cost=cost)
+        travel.status = 'Completed'
+        travel.save()
+        #messages.success(request, 'Your request has been logged! Please check your email for update on approval')
+        #logger.debug(request.POST)
+        #return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('home'))
+
+
+@login_required
+def return_flight_trip(request):
+    if request.method=='POST':
+        result = request.POST
+        print result
+        departure_location = result['departure_location']
+        destination_location = result['destination_location']
+        flight_cost = result['flight_cost']
+        departure_date = result['departure_date'] #datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        arrival_date = result['departure_date'] #datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        return_departure_date = result['return_departure_date']
+        return_arrival_date = result['return_arrival_date']
+        advance_len = int(result['advance_len'])
+        accomodation_len = int(result['accommodation_len'])
+        post_details = result['postdetails']
+        travel=Travel.objects.get(pk=post_details)
+        Flight.objects.create(travel=travel, departure_airport=departure_location, destination_airport=destination_location, departure_date=departure_date, destination_date=arrival_date, flight_cost=flight_cost)
+        Flight.objects.create(travel=travel, departure_airport=destination_location , destination_airport=departure_location, departure_date=return_departure_date, destination_date=return_arrival_date, is_return=True)
+        if accomodation_len > 0:
+            for i in range(accomodation_len):
+                name = result['accommodation[%s][name]' % i]
+                check_in_date = result['accommodation[%s][check_in_date]']     #datetime.datetime.strptime(result['accommodation[%s][check_in_date]' % i], '%Y-%m-%d').strftime('%Y-%m-%d')
+                check_out_date = result['accommodation[%s][check_out_date]']   ##datetime.datetime.strptime(result['accommodation[%s][check_out_date]' % i], '%Y-%m-%d').strftime('%Y-%m-%d')
+                Accommodation.objects.create(travel=travel, name=name, check_in_date=check_in_date, check_out_date=check_out_date)
+        if advance_len > 0:
+            for i in range(advance_len):
+                advance_description = result['advance[%s][advance_description]' % i]
+                advance = AdvanceDescription.objects.get(name=advance_description)
+                units = result['advance[%s][units]' % i]
+                rate = result['advance[%s][rate]' % i]
+                cost = result['advance[%s][cost]' % i]
+                Advance.objects.create(travel=travel,advance_description=advance, units=units, rate=rate, cost=cost)
+        travel.status = 'Completed'
+        travel.save()
+        #messages.success(request, 'Your request has been logged! Please check your email for update on approval')
+        #logger.debug(request.POST)
+        #return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('home'))
+
+
+
+@login_required
+def multiple_flight_trip(request):
+
+    if request.method=='POST':
+        result = request.POST
+        print result
+        #departure_location = result['departure_location']
+        #destination_location = result['destination_location']
+        #flight_cost = result['flight_cost']
+        flight = result['multiple']
+        flight_len = result['flight_len']
+        departure_date = result['departure_date'] #datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        arrival_date = result['departure_date'] #datetime.datetime.strptime(result['departure_date'], '%Y-%m-%d').strftime('%Y-%m-%d')
+        return_departure_date = result['return_departure_date']
+        return_arrival_date = result['return_arrival_date']
+        advance_len = int(result['advance_len'])
+        accomodation_len = int(result['accommodation_len'])
+        post_details = result['postdetails']
+        travel=Travel.objects.get(pk=post_details)
+        #Flight.objects.create(travel=travel, departure_airport=departure_location, destination_airport=destination_location, departure_date=departure_date, destination_date=arrival_date, flight_cost=flight_cost)
+        #Flight.objects.create(travel=travel, departure_airport=destination_location , destination_airport=departure_location, departure_date=return_departure_date, destination_date=return_arrival_date, is_return=True)
+        if flight_len > 0:
+            for i in range(flight_len):
+                pass
+
+
+        if accomodation_len > 0:
+            for i in range(accomodation_len):
+                name = result['accommodation[%s][name]' % i]
+                check_in_date = result['accommodation[%s][check_in_date]']     #datetime.datetime.strptime(result['accommodation[%s][check_in_date]' % i], '%Y-%m-%d').strftime('%Y-%m-%d')
+                check_out_date = result['accommodation[%s][check_out_date]']   ##datetime.datetime.strptime(result['accommodation[%s][check_out_date]' % i], '%Y-%m-%d').strftime('%Y-%m-%d')
+                Accommodation.objects.create(travel=travel, name=name, check_in_date=check_in_date, check_out_date=check_out_date)
+        if advance_len > 0:
+            for i in range(advance_len):
+                advance_description = result['advance[%s][advance_description]' % i]
+                advance = AdvanceDescription.objects.get(name=advance_description)
+                units = result['advance[%s][units]' % i]
+                rate = result['advance[%s][rate]' % i]
+                cost = result['advance[%s][cost]' % i]
+                Advance.objects.create(travel=travel,advance_description=advance, units=units, rate=rate, cost=cost)
+        travel.status = 'Completed'
+        travel.save()
+        #messages.success(request, 'Your request has been logged! Please check your email for update on approval')
+        #logger.debug(request.POST)
+        #return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('home'))
+
+@login_required
+def test(request):
+    template = 'flight/oneway.html'
+    context = { 'username': request.user}
+    return render(request, template, context)
+
+
+def approve(request, template='flight/approve-travel.html'):
+    reference = request.GET.get('reference')
+    approval_level = request.GET.get('approval')
+    context = {}
+    travel_obj = get_object_or_404(Travel, reference=reference)
+    user_obj = travel_obj.user
+    #update travel and send user an email of approval, then get next approval and send an email as well
+    #do next person update and search for corresponding I.E: search for corrensponding person
+    #check the type of travel and call corresponding list
+    map_list = []
+    if travel_obj.trip_type == 'Road Trip':
+        map_list = road_map_list
+
+    next_person_index = map_list.index(approval_level)
+    next_person_index += 1
+    road_trip_mapping(request.user, travel_obj.reference, 1)
+    # approval_mapping = ApprovalMapping.objects.get(employee=user_obj)
+    #oya send mail to the next person
+    # try:
+    #     subject = 'Travel Request | Airtel Travel'
+    #     email_template = 'flight/approval-request.html'
+    #     to = map_list[next_person_index]  # change this part to the conrresponding email (e.g: line manager email)
+    #     from_email = "Airtel Travel <hello@airtel.ng>"
+    #     context_dict = {'travel': travel_obj, 'user': request.user, 'host': request.META['HTTP_HOST']}
+    #     send_email(subject, email_template, [to, ], from_email, context_dict)
+    # except IndexError: #list has gotten to an end, mail user
+    #     subject = 'Travel Request | Airtel Travel'
+    #     email_template = 'flight/acceptance.html'
+    #     to = travel_obj.user.email  # change this part to the conrresponding email (e.g: line manager email)
+    #     from_email = "Airtel Travel <hello@airtel.ng>"
+    #     context_dict = {'travel': travel_obj, 'user': request.user, 'host': request.META['HTTP_HOST']}
+    #     send_email(subject, email_template, [to, ], from_email, context_dict)
+    return render(request, template, context)
+
+
+def reject(request, template='flight/reject-travel.html'):
+    reference = request.GET.get('reference')
+    approval_level = request.GET.get('approval')
+    context = {}
+    travel_obj = get_object_or_404(Travel, reference=reference)
+    user_obj = travel_obj.user
+    map_list = []
+    if travel_obj.trip_type == 'Road Trip':
+        map_list = road_map_list
+    #update travel and send user an email of reject
+    travel_obj.approval_level = approval_level
+    # update reference always, so one person cannot reject twice or so
+    travel_obj.reference = my_random_string(6)
+    travel_obj.save()
+    context['travel'] = travel_obj
+    #oya send mail to the next person
+    subject = 'Travel Request | Airtel Travel'
+    email_template = 'flight/rejection.html'
+    to = user_obj.email  # leave this part because its the user that will receive the email
+    from_email = "Airtel Travel <hello@airtel.ng>"
+    context_dict = {'travel': travel_obj, 'user': request.user, 'host': request.META['HTTP_HOST']}
+    send_email(subject, email_template, [to, ], from_email, context_dict)
+    return render(request, template, context)

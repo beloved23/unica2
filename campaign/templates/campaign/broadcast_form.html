@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %} Broadcast Form {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    New Broadcast
+                </header>
+                  <div class="portlet-body form">
+                            <!-- BEGIN FORM-->
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<script>
+var postdetails = "{{ request.user.pk }}";
+</script>
+
+<!--<div id="travel-form-first">-->
+    <div id="travel-form-first">
+
+        <form id="travelForm" class="horizontal-form" v-on:submit.prevent="validateForm">
+
+                                        <div class="form-body">
+                                            <h3 class="form-section"></h3>
+                                                  <!--<input type='hidden' name='csrfmiddlewaretoken' value='1fbIMxOCZALCSyHulL9dnj7xdbGWpeOh3orP42weSe5J47eC7D6I3648iQlCrG5N' />-->
+                                            <div class="row">
+        
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Broadcast Name *</label>
+                                                         <input type="text" v-model="broadcast_name" name="broadcast_name" class="form-control" id="broadcast_name">
+                                                        <span class="help-block"> </span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Broadcast Description *</label>
+                                                        <input type="text" v-model="broadcast_description" name="broadcast_description" class="form-control" id="broadcast_description" >
+                                                        <span class="help-block"></span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            </div>
+                                            <!--/row-->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Content Type *</label>
+                                                        <select class="form-control" v-model="content_type" id="content_type" name="content_type" required>
+                                                            <option value="" selected="selected">---------</option>
+                                                            <option value="Text">Text Sms</option>
+                                                            <option value="Flash">Flash Sms</option>
+                                                        </select>
+                                                        <span class="help-block"></span>
+                                                    </div>
+                                                </div>
+                                                <!--<input value="{{ request.user.pk }}" v-model="user" type="hidden">-->
+
+                                                <!--/span-->
+                                              <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Sender Address *</label>
+                                                        <input type="text" v-model="sender" name="sender" class="form-control" id="sender" >
+                                                        <span class="help-block"> </span>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            </div>
+
+                                            <div class="row">
+                                                   <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Message *</label>
+                                                        <textarea class="form-control" cols="40" v-model="message" id="id_message" name="message" rows="10" maxlength="320" required>
+        </textarea>
+                                                        <span class="help-block"> Char Count [[ message.length ]] of 320</span>
+                                                    </div>
+                                                </div>
+
+                                                   <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Select Base *</label>
+                                                        <!--<select class="form-control" v-model="base_info" id="base_info" name="base_info" required>-->
+                                                            <!--<option value="" selected="selected">-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+                                                            <!--<option value="2">Text Sms</option>-->
+                                                            <!--<option value="3">Flash Sms</option>-->
+                                                        <!--</select>-->
+                                                        {{ form.base_file }}
+                                                        <span class="help-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Schedule Delivery</label>
+                                                            <input type="checkbox"  v-model="checked" value="true">
+                                                        </div>
+                                                    </div>
+                                                <div class="form-group" v-show="checked == true">
+                                                        <label class="control-label col-md-6">Start Time</label>
+                                                        <div class="col-md-3">
+                                                            <input id="datetimepicker" type="text" v-model="schedule_start" name="schedule_start" class="form-control">
+
+
+                                                        </div>
+                                                    </div>
+                                                 <div class="form-group" v-show="checked == true">
+                                                        <label class="control-label col-md-6">End Time</label>
+                                                        <div class="col-md-3">
+                                                           <input id="datetimepicker2" type="text" v-model="end_time" name="end_time" class="form-control">
+                                                        </div>
+                                                    </div>
+                                    </div>
+                                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                                    <!--/row-->
+                                    <!--/row-->
+                                    <!--<div class="table-scrollable" v-show="checked == true">-->
+                                    <!--</div>-->
+                                </div>
+                                <!-- <pre>[[ $data ]]</pre> -->
+                                <div class="form-actions left">
+                                    <button @click="validateForm" class="btn btn-info red">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                      <script type="text/javascript">
+
+                      var dateToday = new Date();
+                        $(document).ready(function() {
+                            $('#datetimepicker, #datetimepicker2').datetimepicker({
+                             minDate:0, //yesterday is minimum date
+                            });
+
+                        });
+</script>
+                  </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
